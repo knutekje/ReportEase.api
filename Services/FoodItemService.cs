@@ -1,41 +1,49 @@
 using MongoDB.Bson;
+using ReportEase.api.Models;
+using ReportEase.api.Repositories;
 
-public class FoodItemService
+namespace ReportEase.api.Services
 {
-    private readonly FoodItemRepository _repository;
 
-    public FoodItemService(FoodItemRepository repository)
-    {
-        _repository = repository;
-    }
 
-    public async Task<List<FoodItem>> GetAllItemsAsync()
+    public class FoodItemService
     {
-        return await _repository.GetAllAsync();
-    }
+        private readonly FoodItemRepository _repository;
 
-    public async Task<FoodItem> GetItemByIdAsync(ObjectId id)
-    {
-        var item = await _repository.GetByIdAsync(id);
-        if (item == null)
+        public FoodItemService(FoodItemRepository repository)
         {
-            throw new KeyNotFoundException($"Food item with ID {id} not found.");
+            _repository = repository;
         }
-        return item;
-    }
 
-    public async Task CreateItemAsync(FoodItem item)
-    {
-        await _repository.CreateAsync(item);
-    }
+        public async Task<List<FoodItem>> GetAllItemsAsync()
+        {
+            return await _repository.GetAllAsync();
+        }
 
-    public async Task UpdateItemAsync(FoodItem item)
-    {
-        await _repository.UpdateAsync(item);
-    }
+        public async Task<FoodItem> GetItemByIdAsync(ObjectId id)
+        {
+            var item = await _repository.GetByIdAsync(id);
+            if (item == null)
+            {
+                throw new KeyNotFoundException($"Food item with ID {id} not found.");
+            }
 
-    public async Task DeleteItemAsync(ObjectId id)
-    {
-        await _repository.DeleteAsync(id);
+            return item;
+        }
+
+        public async Task CreateItemAsync(FoodItem item)
+        {
+            await _repository.CreateAsync(item);
+        }
+
+        public async Task UpdateItemAsync(FoodItem item)
+        {
+            await _repository.UpdateAsync(item);
+        }
+
+        public async Task DeleteItemAsync(ObjectId id)
+        {
+            await _repository.DeleteAsync(id);
+        }
     }
 }

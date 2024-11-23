@@ -13,7 +13,6 @@
         "packagesPath": "/home/knutekje/.nuget/packages/",
         "outputPath": "/home/knutekje/Code/ReportEase/ReportEase.api/obj/",
         "projectStyle": "PackageReference",
-        "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
           "/home/knutekje/.nuget/NuGet/NuGet.Config"
         ],

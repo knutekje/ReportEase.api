@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using ReportEase.api.Models;
+using ReportEase.api.Services;
 
 [ApiController]
 [Route("api/food-waste-reports")]

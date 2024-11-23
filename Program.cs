@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using ReportEase.api.Models; // Replace with your actual namespace
+
 using ReportEase.api.Repositories;
 using ReportEase.api.Services;
 
@@ -11,8 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 
 // Configure MongoDB settings and context
-builder.Services.Configure<MongoDBSettings>(
-    builder.Configuration.GetSection("MongoDB"));
+/*builder.Services.Configure<MongoDBSettings>(
+    builder.Configuration.GetSection("MongoDB"));*/
 
 builder.Services.AddSingleton<MongoDbContext>();
 

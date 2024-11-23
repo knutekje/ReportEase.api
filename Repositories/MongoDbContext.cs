@@ -8,15 +8,14 @@ using Microsoft.Extensions.Options;
 public class MongoDbContext
 {
     private readonly IMongoDatabase _database;
-
     // Constructor to initialize MongoDB connection
-    public MongoDbContext(IOptions<MongoDBSettings> settings)
+    public MongoDbContext(IConfiguration configuration)
     {
-        var client = new MongoClient(settings.Value.ConnectionString);
-        _database = client.GetDatabase(settings.Value.DatabaseName);
+        var client = new MongoClient(configuration["MongoDB:ConnectionString"]);
+        _database = client.GetDatabase(configuration["MongoDB:DatabaseName"]);
     }
 
-    // Generic method to get a collection
+   
     public IMongoCollection<T> GetCollection<T>(string name)
     {
         return _database.GetCollection<T>(name);

@@ -1,0 +1,55 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Rider specific
+.idea/
+.idea/*
+*.iml
+
+# Build directories
+bin/
+obj/
+out/
+
+# Rider workspace files
+.idea/
+*.sln.iml
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.VC.db
+
+# Logs and temp files
+*.log
+*.tmp
+*.lock
+Logs/
+Temp/
+
+# Package management
+node_modules/
+bower_components/
+*.nuget/
+packages/
+*.nupkg
+*.snupkg
+*.nuspec
+
+# Scaffolding files
+ScaffoldingReadMe.txt
+
+# Environment files
+.env
+
+# DotNet specific
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Rider caches
+.idea/
+.idea

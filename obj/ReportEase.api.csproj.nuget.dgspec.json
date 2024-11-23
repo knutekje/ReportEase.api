@@ -13,6 +13,7 @@
         "packagesPath": "/home/knutekje/.nuget/packages/",
         "outputPath": "/home/knutekje/Code/ReportEase/ReportEase.api/obj/",
         "projectStyle": "PackageReference",
+        "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
           "/home/knutekje/.nuget/NuGet/NuGet.Config"
         ],
@@ -43,9 +44,21 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Mvc": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[3.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

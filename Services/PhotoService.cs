@@ -1,4 +1,5 @@
 using MongoDB.Bson;
+using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using ReportEase.api.Models;
 using ReportEase.api.Repositories;
@@ -9,30 +10,41 @@ public class PhotoService
 {
     private readonly PhotoRepository _photoRepository;
     private readonly GridFSBucket _gridFSBucket;
+    private readonly IMongoDatabase _database;
 
-    public PhotoService(PhotoRepository photoRepository, MongoDbContext context)
+    public PhotoService(IConfiguration configuration, PhotoRepository photoRepository, MongoDbContext context)
+   
     {
+        var mongoClient = new MongoClient(configuration["MongoDB:ConnectionString"]);
+        _database = mongoClient.GetDatabase(configuration["MongoDB:DatabaseName"]);
         _photoRepository = photoRepository;
-        _gridFSBucket = context.GetGridFSBucket();
+        _gridFSBucket = new GridFSBucket(_database);
+
     }
-
-    public async Task<ObjectId> UploadPhotoAsync(Stream fileStream, string fileName, string contentType, ObjectId? foodWasteReportId, ObjectId? discrepancyId)
+    
+    public async Task<ObjectId> UploadFileAsync(Stream fileStream, string fileName, string contentType)
     {
-        var photoId = await _gridFSBucket.UploadFromStreamAsync(fileName, fileStream);
-
-        var photo = new Photo
+        var options = new GridFSUploadOptions
         {
-            Id = photoId,
-            Filename = fileName,
-            ContentType = contentType,
-            AssociatedFoodWasteReportId = foodWasteReportId,
-            AssociatedDiscrepancyId = discrepancyId,
-            UploadedAt = DateTime.UtcNow
+            Metadata = new BsonDocument
+            {
+                { "contentType", contentType }
+            }
         };
 
-        await _photoRepository.UploadPhotoAsync(photo);
+        ObjectId fileId;
+        try
+        {
+            // Upload file to GridFS
+            fileId = await _gridFSBucket.UploadFromStreamAsync(fileName, fileStream, options);
+        }
+        catch (Exception ex)
+        {
+            // Handle errors here
+            throw new Exception("Error while uploading file to GridFS: " + ex.Message);
+        }
 
-        return photoId;
+        return fileId;
     }
 
     public async Task<List<Photo>> GetPhotosByFoodWasteReportIdAsync(ObjectId foodWasteReportId)
@@ -44,14 +56,35 @@ public class PhotoService
     {
         return await _photoRepository.GetPhotosByDiscrepancyIdAsync(discrepancyId);
     }
+    
+    public async Task<GridFSFileInfo> GetFileInfoAsync(ObjectId fileId)
+    {
+        try
+        {
+            var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", fileId);
+            var fileInfoCursor = await _gridFSBucket.FindAsync(filter);
+            var fileInfo = await fileInfoCursor.FirstOrDefaultAsync();
 
-    /*public async Task<Stream> GetPhotoStreamByIdAsync(ObjectId photoId)
+            if (fileInfo == null)
+            {
+                throw new Exception("File not found in GridFS.");
+            }
+
+            return fileInfo;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error while fetching file metadata: " + ex.Message);
+        }
+    }
+    public async Task<Stream> GetPhotoStreamByIdAsync(ObjectId photoId)
     {
         var stream = new MemoryStream();
-        await _gridFSBucket.DownloadToStreamByIdAsync(photoId, stream);
+        
+        await _gridFSBucket.DownloadToStreamAsync(photoId, stream);
         stream.Seek(0, SeekOrigin.Begin);
         return stream;
-    }*/
+    }
 
     public async Task DeletePhotoAsync(ObjectId photoId)
     {

@@ -1,3 +1,4 @@
+namespace ReportEase.api.DTOs;
 public class FoodWasteReportDto
 {
     public IFormFile File { get; set; } // For the uploaded photo

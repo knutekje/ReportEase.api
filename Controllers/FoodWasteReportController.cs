@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using ReportEase.api.DTOs;
 using ReportEase.api.Models;
 using ReportEase.api.Services;
 
@@ -27,28 +28,35 @@ public class FoodWasteReportController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateReport([FromForm] FoodWasteReportDto reportDto)
     {
-        if (reportDto == null || string.IsNullOrEmpty(reportDto.ReportJson))
-            return BadRequest("Report data is required.");
-
-        // Deserialize the ReportJson to a FoodWasteReport object
-        var report = JsonSerializer.Deserialize<FoodWasteReport>(reportDto.ReportJson);
-
-        if (report == null)
-            return BadRequest("Invalid report data.");
-
-        // Handle file upload if a file is provided
-        if (reportDto.File != null && reportDto.File.Length > 0)
+        try
         {
-            using var stream = reportDto.File.OpenReadStream();
-            var photoId = await _photoService.UploadPhotoAsync(
-                stream, reportDto.File.FileName, reportDto.File.ContentType, report.Id, null);
+            Console.WriteLine(JsonSerializer.Serialize(reportDto));
+            if (reportDto == null || string.IsNullOrEmpty(reportDto.ReportJson))
+                return BadRequest("Report data is required.");
 
-            report.PhotoIds = new List<ObjectId> { photoId };
+            // Deserialize the ReportJson to a FoodWasteReport object
+            var report = JsonSerializer.Deserialize<FoodWasteReport>(reportDto.ReportJson);
+
+            if (report == null)
+                return BadRequest("Invalid report data.");
+
+            // Handle file upload if a file is provided
+            if (reportDto.File != null && reportDto.File.Length > 0)
+            {
+                using var stream = reportDto.File.OpenReadStream();
+                var photoId = await _photoService.UploadFileAsync(stream, reportDto.File.FileName, reportDto.File.ContentType);
+
+                report.PhotoIds = new List<ObjectId> { photoId };
+            }
+
+            // Save the report
+            await _foodWasteReportService.CreateReportAsync(report);
+            return CreatedAtAction(nameof(GetReportById), new { id = report.Id }, report);
         }
-
-        // Save the report
-        await _foodWasteReportService.CreateReportAsync(report);
-        return CreatedAtAction(nameof(GetReportById), new { id = report.Id }, report);
+        catch
+        {
+            return BadRequest("incorrect input");
+        }
     }
 
 

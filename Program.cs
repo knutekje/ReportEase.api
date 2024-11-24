@@ -9,7 +9,9 @@ using ReportEase.api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// Configure Swagger for API documentation
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<MongoDbContext>();
 
@@ -17,7 +19,16 @@ builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddTransient<FoodItemRepository>();
 builder.Services.AddTransient<FoodWasteReportRepository>();
 builder.Services.AddTransient<PhotoRepository>();
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowShit",
+        policy =>
+        {
+            policy.AllowAnyHeader()
+                .AllowAnyOrigin()
+                .AllowAnyMethod();
+        });
+});
 // Register services
 builder.Services.AddTransient<FoodItemService>();
 builder.Services.AddTransient<PhotoService>();
@@ -26,9 +37,7 @@ builder.Services.AddTransient<FoodWasteReportService>();
 // Add controllers
 builder.Services.AddControllers();
 
-// Configure Swagger for API documentation
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
 /*builder.Services.AddSwaggerGen(options =>
 {
     options.OperationFilter<ComplexFormDataOperationFilter>();
@@ -44,6 +53,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowShit");
 // Add middleware
 app.UseHttpsRedirection();
 app.UseRouting();

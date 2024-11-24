@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 
+namespace ReportEase.api.Models;
 public class Photo
 {
     public ObjectId Id { get; set; } 

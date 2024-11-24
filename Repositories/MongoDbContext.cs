@@ -22,12 +22,6 @@ public class MongoDbContext
 
     public GridFSBucket GetGridFSBucket()
     {
-        return new GridFSBucket(_database, new GridFSBucketOptions
-        {
-            BucketName = "uploads",
-            ChunkSizeBytes = 255 * 1024, 
-            WriteConcern = WriteConcern.WMajority,
-            ReadPreference = ReadPreference.Primary
-        });
+        return new GridFSBucket(_database);
     }
 }

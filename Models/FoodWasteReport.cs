@@ -6,12 +6,14 @@ namespace ReportEase.api.Models
     public class FoodWasteReport
     {
         public ObjectId Id { get; set; }
-        public ObjectId? FoodItemId { get; set; } // Reference to predefined FoodItem
-        public string CustomFoodItem { get; set; } // For custom item names
-        public decimal Quantity { get; set; } // Amount of food wasted
-        public string Description { get; set; } // Optional additional information
+        public ObjectId? FoodItemId { get; set; }
+        public string CustomFoodItem { get; set; }
+        public decimal Quantity { get; set; }
+        public string Description { get; set; }
         public string SubmittedBy { get; set; }
         public DateTime ReportDate { get; set; }
-        public List<ObjectId> PhotoIds { get; set; } // References to photos in GridFS
+        public List<ObjectId> PhotoIds { get; set; } // References photos attached to the report
     }
+
+
 }

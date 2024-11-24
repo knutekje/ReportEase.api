@@ -5,23 +5,22 @@ using MongoDB.Driver;
 
 using ReportEase.api.Repositories;
 using ReportEase.api.Services;
+//using ReportEase.api.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
 
-// Configure MongoDB settings and context
-/*builder.Services.Configure<MongoDBSettings>(
-    builder.Configuration.GetSection("MongoDB"));*/
 
 builder.Services.AddSingleton<MongoDbContext>();
 
 // Register repositories
 builder.Services.AddTransient<FoodItemRepository>();
 builder.Services.AddTransient<FoodWasteReportRepository>();
+builder.Services.AddTransient<PhotoRepository>();
 
 // Register services
 builder.Services.AddTransient<FoodItemService>();
+builder.Services.AddTransient<PhotoService>();
 builder.Services.AddTransient<FoodWasteReportService>();
 
 // Add controllers
@@ -30,6 +29,11 @@ builder.Services.AddControllers();
 // Configure Swagger for API documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+/*builder.Services.AddSwaggerGen(options =>
+{
+    options.OperationFilter<ComplexFormDataOperationFilter>();
+});*/
+
 
 var app = builder.Build();
 

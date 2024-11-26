@@ -35,12 +35,10 @@ public class PhotoService
         ObjectId fileId;
         try
         {
-            // Upload file to GridFS
             fileId = await _gridFSBucket.UploadFromStreamAsync(fileName, fileStream, options);
         }
         catch (Exception ex)
         {
-            // Handle errors here
             throw new Exception("Error while uploading file to GridFS: " + ex.Message);
         }
 
@@ -86,7 +84,7 @@ public class PhotoService
         return stream;
     }
 
-    public async Task DeletePhotoAsync(ObjectId photoId)
+    public async Task DeletePhotoAsync(string photoId)
     {
         await _gridFSBucket.DeleteAsync(photoId);
         await _photoRepository.DeletePhotoAsync(photoId);

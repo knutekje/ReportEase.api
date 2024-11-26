@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using MongoDB.Bson;
+using ReportEase.api.DTOs;
 using ReportEase.api.Models;
 using ReportEase.api.Repositories;
 using ReportEase.api.Services;
@@ -10,10 +12,12 @@ namespace ReportEase.api.Services
     {
         private readonly FoodWasteReportRepository _repository;
         private readonly FoodItemService _foodItemService;
+        private readonly PhotoService _photoService;
 
-        public FoodWasteReportService(FoodWasteReportRepository repository, FoodItemService foodItemService)
+        public FoodWasteReportService(FoodWasteReportRepository repository, FoodItemService foodItemService, PhotoService photoService)
         {
             _repository = repository;
+            _photoService = photoService;
             _foodItemService = foodItemService;
         }
 
@@ -22,7 +26,7 @@ namespace ReportEase.api.Services
             return await _repository.GetAllAsync();
         }
 
-        public async Task<FoodWasteReport> GetReportByIdAsync(ObjectId id)
+        public async Task<FoodWasteReport> GetReportByIdAsync(string id)
         {
             var report = await _repository.GetByIdAsync(id);
             if (report == null)
@@ -32,35 +36,36 @@ namespace ReportEase.api.Services
 
             return report;
         }
-
-        public async Task CreateReportAsync(FoodWasteReport report)
+        public async Task<FoodWasteReport> CreateReportAsync( FoodReportCreateDTO report, IFormFile file)
         {
-            // Validate Quantity
-            if (report.Quantity <= 0)
+            ObjectId fileid;
+            var  foodItem = await _foodItemService.GetItemByIdAsync(report.FoodItemId);
+            
+            using (var stream = file.OpenReadStream())
             {
-                throw new ArgumentException("Quantity must be greater than zero.");
+                fileid = await _photoService.UploadFileAsync(stream, file.FileName, file.ContentType);
             }
 
-            // Validate FoodItemId if present
-            if (report.FoodItemId.HasValue)
+            FoodWasteReport foodWasteReport = new()
             {
-                var foodItem = await _foodItemService.GetItemByIdAsync(report.FoodItemId.Value);
-                if (foodItem == null)
-                {
-                    throw new ArgumentException($"Food item with ID {report.FoodItemId} not found.");
-                }
-            }
+                FoodItemId = report.FoodItemId,
+                Department = report.Department,
+                Quantity = report.Quantity,
+                Value = (report.Quantity * foodItem.UnitPrice),
+                ReportDate = DateTime.Now,
+                PhotoId = fileid.ToString(),
+            };
+            await _repository.CreateAsync(foodWasteReport);
+            return foodWasteReport;
 
-            // Insert report
-            await _repository.CreateAsync(report);
         }
-
+        
         public async Task UpdateReportAsync(FoodWasteReport report)
         {
             await _repository.UpdateAsync(report);
         }
 
-        public async Task DeleteReportAsync(ObjectId id)
+        public async Task DeleteReportAsync(string id)
         {
             await _repository.DeleteAsync(id);
         }

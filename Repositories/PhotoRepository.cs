@@ -30,12 +30,12 @@ public class PhotoRepository
         return await _photos.Find(p => p.AssociatedDiscrepancyId == discrepancyId).ToListAsync();
     }
 
-    public async Task<Photo> GetPhotoByIdAsync(ObjectId photoId)
+    public async Task<Photo> GetPhotoByIdAsync(string photoId)
     {
         return await _photos.Find(p => p.Id == photoId).FirstOrDefaultAsync();
     }
 
-    public async Task DeletePhotoAsync(ObjectId photoId)
+    public async Task DeletePhotoAsync(string photoId)
     {
         await _photos.DeleteOneAsync(p => p.Id == photoId);
     }

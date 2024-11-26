@@ -20,14 +20,14 @@ namespace ReportEase.api.Services
             return await _repository.GetAllAsync();
         }
 
-        public async Task<FoodItem> GetItemByIdAsync(ObjectId id)
+        public async Task<FoodItem> GetItemByIdAsync(string id)
         {
             var item = await _repository.GetByIdAsync(id);
             if (item == null)
             {
-                throw new KeyNotFoundException($"Food item with ID {id} not found.");
+                return new FoodItem() { UnitPrice = 0 };
             }
-
+            
             return item;
         }
 
@@ -41,7 +41,7 @@ namespace ReportEase.api.Services
             await _repository.UpdateAsync(item);
         }
 
-        public async Task DeleteItemAsync(ObjectId id)
+        public async Task DeleteItemAsync(string id)
         {
             await _repository.DeleteAsync(id);
         }

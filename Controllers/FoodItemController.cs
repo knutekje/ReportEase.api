@@ -24,10 +24,12 @@ public class FoodItemController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetFoodItemById(string id)
     {
+        /*
         if (!ObjectId.TryParse(id, out var objectId))
             return BadRequest("Invalid ID format.");
+            */
 
-        var item = await _foodItemService.GetItemByIdAsync(objectId);
+        var item = await _foodItemService.GetItemByIdAsync(id);
         return Ok(item);
     }
 
@@ -44,8 +46,10 @@ public class FoodItemController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateFoodItem(string id, [FromBody] FoodItem foodItem)
     {
+        /*
         if (!ObjectId.TryParse(id, out var objectId) || objectId != foodItem.Id)
             return BadRequest("ID mismatch or invalid format.");
+            */
 
         await _foodItemService.UpdateItemAsync(foodItem);
         return NoContent();
@@ -54,10 +58,12 @@ public class FoodItemController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteFoodItem(string id)
     {
+        /*
         if (!ObjectId.TryParse(id, out var objectId))
             return BadRequest("Invalid ID format.");
+            */
 
-        await _foodItemService.DeleteItemAsync(objectId);
+        await _foodItemService.DeleteItemAsync(id);
         return NoContent();
     }
 }

@@ -20,7 +20,7 @@ public class FoodWasteReportRepository
         return await _reports.Find(Builders<FoodWasteReport>.Filter.Empty).ToListAsync();
     }
 
-    public async Task<FoodWasteReport> GetByIdAsync(ObjectId id)
+    public async Task<FoodWasteReport> GetByIdAsync(string id)
     {
         return await _reports.Find(r => r.Id == id).FirstOrDefaultAsync();
     }
@@ -35,7 +35,7 @@ public class FoodWasteReportRepository
         await _reports.ReplaceOneAsync(r => r.Id == report.Id, report);
     }
 
-    public async Task DeleteAsync(ObjectId id)
+    public async Task DeleteAsync(string id)
     {
         await _reports.DeleteOneAsync(r => r.Id == id);
     }

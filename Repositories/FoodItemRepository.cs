@@ -19,7 +19,7 @@ public class FoodItemRepository
         return await _foodItems.Find(Builders<FoodItem>.Filter.Empty).ToListAsync();
     }
 
-    public async Task<FoodItem> GetByIdAsync(ObjectId id)
+    public async Task<FoodItem> GetByIdAsync(string id)
     {
         return await _foodItems.Find(f => f.Id == id).FirstOrDefaultAsync();
     }
@@ -34,7 +34,7 @@ public class FoodItemRepository
         await _foodItems.ReplaceOneAsync(f => f.Id == item.Id, item);
     }
 
-    public async Task DeleteAsync(ObjectId id)
+    public async Task DeleteAsync(string id)
     {
         await _foodItems.DeleteOneAsync(f => f.Id == id);
     }

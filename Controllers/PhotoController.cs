@@ -40,9 +40,7 @@ public class PhotoController : ControllerBase
     }
  
 
-    /// <summary>
-    /// Retrieves a photo by its ID.
-    /// </summary>
+  
     [HttpGet("download/{id}")]
     public async Task<IActionResult> GetPhotoById(string id)
     {
@@ -93,7 +91,7 @@ public class PhotoController : ControllerBase
         if (!ObjectId.TryParse(id, out var photoId))
             return BadRequest("Invalid Photo ID.");
 
-        await _photoService.DeletePhotoAsync(photoId);
+        await _photoService.DeletePhotoAsync(id);
         return NoContent();
     }
 }

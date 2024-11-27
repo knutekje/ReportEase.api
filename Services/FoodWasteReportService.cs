@@ -51,7 +51,7 @@ namespace ReportEase.api.Services
                 FoodItemId = report.FoodItemId,
                 Department = report.Department,
                 Quantity = report.Quantity,
-                Value = (report.Quantity * foodItem.UnitPrice),
+                Value = (report.Quantity * foodItem.Anbrekkspris),
                 ReportDate = DateTime.Now,
                 PhotoId = fileid.ToString(),
             };

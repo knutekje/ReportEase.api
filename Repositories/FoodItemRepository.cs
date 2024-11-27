@@ -38,4 +38,33 @@ public class FoodItemRepository
     {
         await _foodItems.DeleteOneAsync(f => f.Id == id);
     }
+    
+    public async Task<List<FoodItem>> GetPaginatedFoodItemsAsync(string search, int page, int limit)
+    {
+        var query = _foodItems.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(f => f.Produktnavn.Contains(search));
+        }
+
+        return  query
+            .OrderBy(f => f.Produktnavn) // Sort alphabetically (adjust if needed)
+            .Skip((page - 1) * limit)
+            .Take(limit)
+            .ToList();
+            
+    }
+
+    public async Task<int> GetTotalCountAsync(string search)
+    {
+        var query = _foodItems.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(f => f.Produktnavn.Contains(search));
+        }
+
+        return  query.Count();
+    }
 }

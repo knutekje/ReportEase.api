@@ -9,23 +9,41 @@ namespace ReportEase.api.Services
     public class FoodItemService
     {
         private readonly FoodItemRepository _repository;
-
         public FoodItemService(FoodItemRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<List<FoodItem>> GetAllItemsAsync()
+        /*public async Task<List<FoodItem>> GetAllItemsAsync()
         {
             return await _repository.GetAllAsync();
+        }*/
+        
+        public async Task<PaginatedResult<FoodItemDto>> GetFoodItemsAsync(string search, int page, int limit)
+        {
+            var items = await _repository.GetPaginatedFoodItemsAsync(search, page, limit);
+            var totalCount = await _repository.GetTotalCountAsync(search);
+
+            return new PaginatedResult<FoodItemDto>
+            {
+                Items = items.Select(f => new FoodItemDto
+                {
+                    Id = f.Id,
+                    Name = f.Produktnavn
+                }).ToList(),
+                TotalCount = totalCount,
+                HasMore = (page * limit) < totalCount
+            };
         }
+        
+        
 
         public async Task<FoodItem> GetItemByIdAsync(string id)
         {
             var item = await _repository.GetByIdAsync(id);
             if (item == null)
             {
-                return new FoodItem() { UnitPrice = 0 };
+                return new FoodItem() { Anbrekkspris = 0 };
             }
             
             return item;

@@ -9,8 +9,17 @@ public class FoodItem
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
-    public string Name { get; set; }
-    public string Unit { get; set; } 
-    public decimal UnitPrice { get; set; }
-    public string Url { get; set; }
+
+    [BsonElement("Varenummer")] 
+    public string Varenummer { get; set; } = null!;
+    
+    [BsonElement("Produktnavn")] 
+    public string Produktnavn { get; set; }
+    
+    [BsonElement("Enhetstype")] 
+    public string Enhetstype { get; set; } 
+    
+    [BsonElement("Anbrekkspris")] 
+    public decimal Anbrekkspris { get; set; }
+   
 }}

@@ -14,21 +14,18 @@ public class FoodItemController : ControllerBase
         _foodItemService = foodItemService;
     }
 
+    
+    
     [HttpGet]
-    public async Task<IActionResult> GetAllFoodItems()
+    public async Task<IActionResult> GetFoodItems([FromQuery] string search = "", [FromQuery] int page = 1, [FromQuery] int limit = 10)
     {
-        var items = await _foodItemService.GetAllItemsAsync();
-        return Ok(items);
+        var result = await _foodItemService.GetFoodItemsAsync(search, page, limit);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetFoodItemById(string id)
     {
-        /*
-        if (!ObjectId.TryParse(id, out var objectId))
-            return BadRequest("Invalid ID format.");
-            */
-
         var item = await _foodItemService.GetItemByIdAsync(id);
         return Ok(item);
     }
@@ -46,10 +43,7 @@ public class FoodItemController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateFoodItem(string id, [FromBody] FoodItem foodItem)
     {
-        /*
-        if (!ObjectId.TryParse(id, out var objectId) || objectId != foodItem.Id)
-            return BadRequest("ID mismatch or invalid format.");
-            */
+        
 
         await _foodItemService.UpdateItemAsync(foodItem);
         return NoContent();
@@ -58,10 +52,7 @@ public class FoodItemController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteFoodItem(string id)
     {
-        /*
-        if (!ObjectId.TryParse(id, out var objectId))
-            return BadRequest("Invalid ID format.");
-            */
+       
 
         await _foodItemService.DeleteItemAsync(id);
         return NoContent();

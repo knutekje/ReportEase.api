@@ -64,8 +64,9 @@ public class FoodWasteReportController : ControllerBase
     public async Task<IActionResult> CreateReport([FromForm] FoodWasteReportDto reportDto)
     {
        
-            
+            Console.WriteLine((reportDto.ReportJson));
             var report = JsonSerializer.Deserialize<FoodReportCreateDTO>(reportDto.ReportJson);
+            Console.WriteLine(report.ToJson());
             var file = reportDto.File;
             if (report != null && file.Length > 0)
             {

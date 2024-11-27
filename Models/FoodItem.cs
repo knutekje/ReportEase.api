@@ -20,6 +20,6 @@ public class FoodItem
     public string Enhetstype { get; set; } 
     
     [BsonElement("Anbrekkspris")] 
-    public decimal Anbrekkspris { get; set; }
+    public double Anbrekkspris { get; set; }
    
 }}

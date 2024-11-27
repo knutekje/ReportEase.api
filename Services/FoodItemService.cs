@@ -14,11 +14,7 @@ namespace ReportEase.api.Services
             _repository = repository;
         }
 
-        /*public async Task<List<FoodItem>> GetAllItemsAsync()
-        {
-            return await _repository.GetAllAsync();
-        }*/
-        
+       
         public async Task<PaginatedResult<FoodItemDto>> GetFoodItemsAsync(string search, int page, int limit)
         {
             var items = await _repository.GetPaginatedFoodItemsAsync(search, page, limit);
@@ -29,7 +25,8 @@ namespace ReportEase.api.Services
                 Items = items.Select(f => new FoodItemDto
                 {
                     Id = f.Id,
-                    Name = f.Produktnavn
+                    Name = f.Produktnavn,
+                    Unit = f.Enhetstype
                 }).ToList(),
                 TotalCount = totalCount,
                 HasMore = (page * limit) < totalCount
@@ -41,12 +38,7 @@ namespace ReportEase.api.Services
         public async Task<FoodItem> GetItemByIdAsync(string id)
         {
             var item = await _repository.GetByIdAsync(id);
-            if (item == null)
-            {
-                return new FoodItem() { Anbrekkspris = 0 };
-            }
-            
-            return item;
+            return item ?? new FoodItem() { Anbrekkspris = 0 };
         }
 
         public async Task CreateItemAsync(FoodItem item)

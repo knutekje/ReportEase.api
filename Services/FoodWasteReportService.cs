@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Http.HttpResults;
 using MongoDB.Bson;
 using ReportEase.api.DTOs;
@@ -21,9 +22,18 @@ namespace ReportEase.api.Services
             _foodItemService = foodItemService;
         }
 
-        public async Task<List<FoodWasteReport>> GetAllReportsAsync()
+        public async Task<List<Task<FoodWasteReportListDTO>>> GetAllReportsAsync()
         {
-            return await _repository.GetAllAsync();
+            var reports =  await _repository.GetAllAsync();
+            var reportDTOs = reports.Select(async report => new FoodWasteReportListDTO
+            {
+                Fooditemid = report.FoodItemId, 
+                Description = report.Description,
+                Quantity = report.Quantity,
+                ItemName = (await _foodItemService.GetItemByIdAsync(report.FoodItemId)).Produktnavn,
+                
+            }).ToList();
+            return reportDTOs;
         }
 
         public async Task<FoodWasteReport> GetReportByIdAsync(string id)
@@ -36,12 +46,13 @@ namespace ReportEase.api.Services
 
             return report;
         }
+        
         public async Task<FoodWasteReport> CreateReportAsync( FoodReportCreateDTO report, IFormFile file)
         {
             ObjectId fileid;
-            var  foodItem = await _foodItemService.GetItemByIdAsync(report.FoodItemId);
-            
-            using (var stream = file.OpenReadStream())
+            var  foodItem = await _foodItemService.GetItemByIdAsync(report.FoodItemId ?? throw new InvalidOperationException());
+            Console.WriteLine(foodItem.Produktnavn + "NAME");
+            await using (var stream = file.OpenReadStream())
             {
                 fileid = await _photoService.UploadFileAsync(stream, file.FileName, file.ContentType);
             }
@@ -51,6 +62,7 @@ namespace ReportEase.api.Services
                 FoodItemId = report.FoodItemId,
                 Department = report.Department,
                 Quantity = report.Quantity,
+                Description = report.Description,
                 Value = (report.Quantity * foodItem.Anbrekkspris),
                 ReportDate = DateTime.Now,
                 PhotoId = fileid.ToString(),

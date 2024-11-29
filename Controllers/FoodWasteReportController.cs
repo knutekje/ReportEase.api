@@ -21,47 +21,16 @@ public class FoodWasteReportController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllReports()
+    public async Task<List<FoodWasteReportListDTO>> GetAllReports()
     {
         var reports = await _foodWasteReportService.GetAllReportsAsync();
-        return Ok(reports);
+        return (reports);
     }
 
-    /*
-    [HttpPost]
-    public async Task<IActionResult> CreateReport([FromForm] FoodWasteReportDto reportDto)
-    {
-        try
-        {
-            Console.WriteLine(JsonSerializer.Serialize(reportDto));
-            if (reportDto == null || string.IsNullOrEmpty(reportDto.ReportJson))
-                return BadRequest("Report data is required.");
-
-            var report = JsonSerializer.Deserialize<FoodWasteReport>(reportDto.ReportJson);
-
-            if (report == null)
-                return BadRequest("Invalid report data.");
-
-            if (reportDto.File != null && reportDto.File.Length > 0)
-            {
-                using var stream = reportDto.File.OpenReadStream();
-                var photoId = await _photoService.UploadFileAsync(stream, reportDto.File.FileName, reportDto.File.ContentType);
-
-                report.PhotoIds = new List<string> { photoId.ToString() };
-            }
-
-            await _foodWasteReportService.CreateReportAsync(report);
-            return CreatedAtAction(nameof(GetReportById), new { id = report.Id }, report);
-        }
-        catch
-        {
-            return BadRequest("incorrect input");
-        }
-    }
-    */
+   
     
     [HttpPost]
-    public async Task<IActionResult> CreateReport([FromForm] FoodWasteReportDto reportDto)
+    public async Task<IActionResult> CreateReport([FromForm] JSONFileDTO reportDto)
     {
        
             Console.WriteLine((reportDto.ReportJson));

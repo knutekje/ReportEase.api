@@ -24,10 +24,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<MongoDbContext>();
 
+builder.Services.AddTransient<DiscrepancyRepository>();
+builder.Services.AddTransient<TemperatureReadingRepository>();
 
 builder.Services.AddTransient<FoodItemRepository>();
 builder.Services.AddTransient<FoodWasteReportRepository>();
 builder.Services.AddTransient<PhotoRepository>();
+builder.Services.AddTransient<TemperatureReadingService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowShit",
@@ -42,6 +45,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddTransient<FoodItemService>();
 builder.Services.AddTransient<PhotoService>();
 builder.Services.AddTransient<FoodWasteReportService>();
+builder.Services.AddTransient<DiscrepancyService>();
+builder.Services.AddTransient<TemperatureReadingRepository>();
+
 
 
 builder.Services.AddControllers();

@@ -22,18 +22,28 @@ namespace ReportEase.api.Services
             _foodItemService = foodItemService;
         }
 
-        public async Task<List<Task<FoodWasteReportListDTO>>> GetAllReportsAsync()
+        public async Task<List<FoodWasteReportListDTO>> GetAllReportsAsync()
         {
             var reports =  await _repository.GetAllAsync();
-            var reportDTOs = reports.Select(async report => new FoodWasteReportListDTO
+            var result = await Task.WhenAll(reports.Select(async report =>
             {
-                Fooditemid = report.FoodItemId, 
-                Description = report.Description,
-                Quantity = report.Quantity,
-                ItemName = (await _foodItemService.GetItemByIdAsync(report.FoodItemId)).Produktnavn,
-                
-            }).ToList();
-            return reportDTOs;
+                var foodItem = await _foodItemService.GetItemByIdAsync(report.FoodItemId); // Example of async operation
+                return new FoodWasteReportListDTO
+                {
+                    Fooditemid = report.FoodItemId,
+                    Quantity = report.Quantity,
+                    Foodwasteid = report.Id,
+                    Description = report.Description,
+                    Department = report.Department,
+                    Value = (report.Quantity * foodItem.Anbrekkspris),
+                    ItemName = foodItem?.Produktnavn, 
+                    ReportDate = report.ReportDate,
+                    PhotoId = report.PhotoId,
+                };
+            }));
+
+            return result.ToList();
+           
         }
 
         public async Task<FoodWasteReport> GetReportByIdAsync(string id)

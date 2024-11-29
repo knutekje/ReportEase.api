@@ -11,7 +11,7 @@ namespace ReportEase.api.Models
         public string? Id { get; set; }
         public string? FoodItemId { get; set; }
         public double Quantity { get; set; }
-        
+        public bool Confirmed { get; set; }
         public double Value { get; set; }
         public string Description { get; set; }
         public string Department { get; set; }

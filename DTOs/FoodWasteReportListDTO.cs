@@ -10,7 +10,7 @@ public class FoodWasteReportListDTO
     public string Description { get; set; }
     public string Department { get; set; }
     public string PhotoId { get; set; }
-
+    public DateTime ReportDate { get; set; }
     public string SubmittedBy { get; set; }
 }
   

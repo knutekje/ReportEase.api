@@ -21,7 +21,7 @@ builder.Host.UseSerilog();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddSignalR(); // Add SignalR service
 builder.Services.AddSingleton<MongoDbContext>();
 
 builder.Services.AddTransient<DiscrepancyRepository>();
@@ -71,5 +71,5 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapHub<MessageHub>("/messagehub"); // Map the SignalR hub
 app.Run();

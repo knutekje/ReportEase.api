@@ -14,6 +14,9 @@ public static class DependencyInjectionExtensions
         services.AddTransient<FoodItemRepository>();
         services.AddTransient<FoodWasteReportRepository>();
         services.AddTransient<PhotoRepository>();
+        services.AddTransient<MeasuringPointRepository>();
+
+        
 
         return services;
     }
@@ -27,6 +30,8 @@ public static class DependencyInjectionExtensions
         services.AddTransient<FoodItemService>();
         services.AddTransient<PhotoService>();
         services.AddTransient<FoodWasteReportService>();
+        services.AddTransient<MeasuringPointService>();
+
 
         return services;
     }

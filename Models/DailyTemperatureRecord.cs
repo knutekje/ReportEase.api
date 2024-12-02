@@ -1,6 +1,5 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System.Collections.Generic;
 
 public class DailyTemperatureRecord
 {
@@ -8,9 +7,14 @@ public class DailyTemperatureRecord
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
 
-    public DateTime Date { get; set; } // The date for the temperature readings
+    public DateTime Date { get; set; } 
+    public string SubmittedBy { get; set; } 
+    public List<MeasuringPointReading> MeasuringPoints { get; set; } = new List<MeasuringPointReading>();
+}
 
-    public string SubmittedBy { get; set; } // Who submitted the readings
-
-    public List<TemperaturePoint> TemperaturePoints { get; set; } = new List<TemperaturePoint>();
+public class MeasuringPointReading
+{
+    public string Name { get; set; }
+    public double Temperature { get; set; } 
+    public bool WithinLimits { get; set; } 
 }

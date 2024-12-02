@@ -13,6 +13,7 @@ public class MessageHub : Hub
     }
     public async Task AcknowledgeNotification(string notificationId)
     {
-        // Logic to mark notification as acknowledged (if needed)
+        throw new NotImplementedException();
+        
     }
 }

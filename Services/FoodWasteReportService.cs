@@ -27,7 +27,7 @@ namespace ReportEase.api.Services
             var reports =  await _repository.GetAllAsync();
             var result = await Task.WhenAll(reports.Select(async report =>
             {
-                var foodItem = await _foodItemService.GetItemByIdAsync(report.FoodItemId); // Example of async operation
+                var foodItem = await _foodItemService.GetItemByIdAsync(report.FoodItemId);
                 return new FoodWasteReportListDTO
                 {
                     Fooditemid = report.FoodItemId,

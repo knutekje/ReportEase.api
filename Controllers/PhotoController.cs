@@ -82,9 +82,7 @@ public class PhotoController : ControllerBase
              }
          }*/
 
-    /// <summary>
-    /// Deletes a photo by its ID.
-    /// </summary>
+  
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePhoto(string id)
     {

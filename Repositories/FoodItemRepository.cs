@@ -49,7 +49,7 @@ public class FoodItemRepository
         }
 
         return  query
-            .OrderBy(f => f.Produktnavn) // Sort alphabetically (adjust if needed)
+            .OrderBy(f => f.Produktnavn) 
             .Skip((page - 1) * limit)
             .Take(limit)
             .ToList();

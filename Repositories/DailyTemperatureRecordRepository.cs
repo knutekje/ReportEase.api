@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using ReportEase.api.Models;
 using ReportEase.api.Repositories;
 
 public class DailyTemperatureRecordRepository
@@ -34,4 +35,32 @@ public class DailyTemperatureRecordRepository
     {
         await _records.DeleteOneAsync(r => r.Id == id);
     }
+    public async Task AddUnitAsync(string recordId, TemperaturePoint point)
+    {
+        /*var filter = Builders<DailyTemperatureRecord>.Filter.Eq(r => r.Id, recordId);
+        var update = Builders<DailyTemperatureRecord>.Update.AddToSet(r => r.TemperaturePoints, point);
+        await _records.UpdateOneAsync(filter, update);*/
+        throw new NotImplementedException();
+    }
+    
+
+    public async Task RemoveUnitAsync(string recordId, string unitName)
+    {
+        /*var filter = Builders<DailyTemperatureRecord>.Filter.Eq(r => r.Id, recordId);
+        var update = Builders<DailyTemperatureRecord>.Update.PullFilter(
+            r => r.TemperaturePoints,
+            point => point.Unit == unitName
+        );
+        await _records.UpdateOneAsync(filter, update);*/
+        throw new NotImplementedException();
+    }
+    public async Task<DailyTemperatureRecord> GetByIdAsync(string id)
+    {
+        var filter = Builders<DailyTemperatureRecord>.Filter.Eq(r => r.Id, id);
+        return await _records.Find(filter).FirstOrDefaultAsync();
+    }
+    
+    
+    
+    
 }

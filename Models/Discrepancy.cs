@@ -27,7 +27,7 @@
 
 
 
-// Enums for Severity and Status
+
 public enum SeverityLevel
 {
     Low,

@@ -23,10 +23,8 @@ public class NotificationService
 
     public async Task SendNotificationAsync(Notification notification)
     {
-        // Save the notification
         await _repository.CreateAsync(notification);
 
-        // Send via SignalR
         if (notification.Type == NotificationType.Direct && !string.IsNullOrEmpty(notification.RecipientId))
         {
             await _hubContext.Clients.User(notification.RecipientId).SendAsync("ReceiveNotification", notification);
